@@ -1,6 +1,6 @@
 //
 //  SPRequestService.m
-//  APIHelper
+//  SweetRest
 //
 //  Created by Sergey Popov on 11.03.15.
 //  Copyright (c) 2015 Sergey Popov. All rights reserved.
@@ -12,7 +12,8 @@
 @interface SPRequestService ()
 
 @property (nonatomic, copy) void(^failureBlock)(NSURLSessionDataTask *task, NSError *error);
-@property (nonatomic, copy) void(^successBlock)(NSURLSessionDataTask *task, id responseObject);
+@property (nonatomic, copy) NSError *(^successBlock)(NSURLSessionDataTask *task, id responseObject);
+@property (nonatomic, strong, readonly) NSOperationQueue *performQueue;
 
 @end
 
@@ -20,26 +21,124 @@
 
 #pragma mark - init
 
+- (instancetype)init
+{
+    NSAssert(NO, @"Please do not use init.");
+    return nil;
+}
+
 - (instancetype)initWithSessionManager:(AFHTTPSessionManager *)manger
 {
     self = [super init];
     if (self)
     {
         _sessionManager = manger;
+        _performQueue = [NSOperationQueue new];
+    }
+    return self;
+}
+
+- (instancetype)initWithSessionManager:(AFHTTPSessionManager *)manger success:(NSError *(^)(NSURLSessionDataTask *, id))success failure:(void (^)(NSURLSessionDataTask *, NSError *))failure
+{
+    self = [self initWithSessionManager:manger];
+    
+    if (self)
+    {
+        _successBlock = success;
+        _failureBlock = failure;
     }
     return self;
 }
 
 #pragma mark - Public Instance
 
-- (void)GET:(NSString *)URLString params:(id)params completion:(SPRequestServiceCallback)callback
+- (void)GET:(NSString *)URLString params:(id)params perform:(SRPerform)perform complete:(SRComplete)complete
 {
-    [self.sessionManager GET:URLString parameters:params success:[self sp_successProccessing] failure:[self sp_failureProccessing]];
+    NSParameterAssert(perform);
+    NSParameterAssert(complete);
+    
+    [self.sessionManager GET:URLString parameters:params
+                     success:[self sr_successWithPerform:perform complete:complete]
+                     failure:[self sr_failureWithComplete:complete]];
+}
+
+- (void)POST:(NSString *)URLString params:(id)params perform:(SRPerform)perform complete:(SRComplete)complete
+{
+    NSParameterAssert(perform);
+    NSParameterAssert(complete);
+    
+    [self.sessionManager POST:URLString parameters:params
+                      success:[self sr_successWithPerform:perform complete:complete]
+                      failure:[self sr_failureWithComplete:complete]];
+}
+
+- (void)PUT:(NSString *)URLString params:(id)params perform:(SRPerform)perform complete:(SRComplete)complete
+{
+    NSParameterAssert(perform);
+    NSParameterAssert(complete);
+    
+    [self.sessionManager PUT:URLString parameters:params
+                     success:[self sr_successWithPerform:perform complete:complete]
+                     failure:[self sr_failureWithComplete:complete]];
+}
+
+
+- (void)PATCH:(NSString *)URLString params:(id)params perform:(SRPerform)perform complete:(SRComplete)complete
+{
+    NSParameterAssert(perform);
+    NSParameterAssert(complete);
+    
+    [self.sessionManager PATCH:URLString parameters:params
+                       success:[self sr_successWithPerform:perform complete:complete]
+                       failure:[self sr_failureWithComplete:complete]];
+}
+
+- (void)DELETE:(NSString *)URLString params:(id)params perform:(SRPerform)perform complete:(SRComplete)complete
+{
+    NSParameterAssert(perform);
+    NSParameterAssert(complete);
+    
+    [self.sessionManager DELETE:URLString parameters:params
+                        success:[self sr_successWithPerform:perform complete:complete]
+                        failure:[self sr_failureWithComplete:complete]];
 }
 
 #pragma mark - Private Instance
 
-- (void (^)(NSURLSessionDataTask *task, NSError *error))sp_failureProccessing
+- (void (^)(NSURLSessionDataTask *task, id responseObject))sr_successWithPerform:(SRPerform)perform complete:(SRComplete)complete
+{
+    return ^(NSURLSessionDataTask *task, id responseObject) {
+      
+        NSError *err = nil;
+        
+        if (self.successBlock)
+        {
+            err = self.successBlock(task, responseObject);
+        }
+        
+        if (err)
+        {
+            complete(task, err);
+            return ;
+        }
+        
+        @try {
+            
+            perform(task, responseObject);
+            
+        }
+        @catch (NSException *exception) {
+            
+            err = [NSError errorWithDomain:SRErrorDomain code:100 userInfo:@{NSLocalizedDescriptionKey : exception.reason}];
+            
+        }
+        
+        complete(task, err);
+        
+    };
+}
+
+- (void (^)(NSURLSessionDataTask *task, NSError *error))sr_failureWithComplete:(SRComplete)complete
 {
     return ^(NSURLSessionDataTask *task, NSError *error) {
         
@@ -47,19 +146,11 @@
         {
             self.failureBlock(task, error);
         }
-    };
-}
-
-- (void (^)(NSURLSessionDataTask *task, id responseObject))sp_successProccessing
-{
-    return ^(NSURLSessionDataTask *task, id responseObject) {
-      
-        if (self.successBlock)
-        {
-            self.successBlock(task, responseObject);
-        }
         
+        complete(task, error);
     };
 }
 
 @end
+
+NSString * const SRErrorDomain = @"SRErrorDomain";
