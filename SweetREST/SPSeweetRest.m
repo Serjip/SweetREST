@@ -11,7 +11,7 @@
 
 @interface SPSeweetRest ()
 
-@property (nonatomic, strong) NSDictionary *mutableHTTPRequestHeaders;
+@property (nonatomic, strong) NSMutableDictionary *mutableHTTPRequestHeaders;
 @property (nonatomic, strong, readonly) NSSet *HTTPMethodsEncodingParametersInURI;
 
 @end
@@ -44,7 +44,22 @@
     return self;
 }
 
-- (NSURLSessionDataTask *)GET:(NSString *)URLString params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion
+- (void)setValue:(NSString *)value forHTTPHeaderField:(NSString *)field
+{
+    [self.mutableHTTPRequestHeaders setValue:value forKey:field];
+}
+
+- (void)removeValueForHTTPHeaderField:(NSString *)field
+{
+    [self.mutableHTTPRequestHeaders removeObjectForKey:field];
+}
+
+- (NSString *)valueForHTTPHeaderField:(NSString *)field
+{
+    return [self.mutableHTTPRequestHeaders valueForKey:field];
+}
+
+- (NSURLSessionDataTask *)GET:(NSString *)URLString params:(NSDictionary *)params completion:(void (^)(id jsonObject, NSError *error))completion
 {
     return [self dataTaskWihtMethod:@"GET" URL:URLString params:params completion:completion];
 }

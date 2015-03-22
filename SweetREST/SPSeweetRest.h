@@ -18,6 +18,10 @@
 @property (nonatomic, assign) NSJSONReadingOptions readingOptions;
 @property (readonly, nonatomic, strong) NSDictionary *HTTPRequestHeaders;
 
+- (void)setValue:(NSString *)value forHTTPHeaderField:(NSString *)field;
+- (void)removeValueForHTTPHeaderField:(NSString *)field;
+- (NSString *)valueForHTTPHeaderField:(NSString *)field;
+
 - (instancetype)initWithSession:(NSURLSession *)session baseURL:(NSURL *)url;
 
 - (NSURLSessionDataTask *)GET:(NSString *)URLString params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion;
