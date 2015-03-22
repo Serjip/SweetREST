@@ -1,14 +1,14 @@
 //
-//  NSDictionary+SRPerfom.m
+//  NSDictionary+SweetRest.m
 //  SweetRest
 //
 //  Created by Sergey Popov on 12.03.15.
 //  Copyright (c) 2015 Sergey Popov. All rights reserved.
 //
 
-#import "NSDictionary+SRPerfom.h"
+#import "NSDictionary+SweetRest.h"
 
-@implementation NSDictionary (SRPerfom)
+@implementation NSDictionary (SweetRest)
 
 
 - (BOOL)boolForKey:(id)key

@@ -1,5 +1,5 @@
 //
-//  NSDictionary+SRPerfom.h
+//  NSDictionary+SweetRest.h
 //  SweetRest
 //
 //  Created by Sergey Popov on 12.03.15.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSDictionary (SRPerfom)
+@interface NSDictionary (SweetRest)
 
 - (BOOL)boolForKey:(id)key;
 - (NSInteger)integerForKey:(id)key;

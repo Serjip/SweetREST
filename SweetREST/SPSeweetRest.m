@@ -7,14 +7,23 @@
 //
 
 #import "SPSeweetRest.h"
+#import "SPQueryStringPair.h"
 
 @interface SPSeweetRest ()
 
-
+@property (nonatomic, strong) NSDictionary *mutableHTTPRequestHeaders;
+@property (nonatomic, strong, readonly) NSSet *HTTPMethodsEncodingParametersInURI;
 
 @end
 
 @implementation SPSeweetRest
+
+#pragma mark - Properties
+
+- (NSDictionary *)HTTPRequestHeaders
+{
+    return [NSDictionary dictionaryWithDictionary:self.mutableHTTPRequestHeaders];
+}
 
 #pragma mark - Public Instance
 
@@ -29,18 +38,50 @@
         _readingOptions = NSJSONReadingMutableContainers;
         _acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", nil];
         _acceptableStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
+        _mutableHTTPRequestHeaders = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"SweetRest",@"User-Agent",nil];
+        _HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", @"DELETE", nil];
     }
     return self;
 }
 
-- (void)POST:(NSString *)URLString params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion
+- (NSURLSessionDataTask *)GET:(NSString *)URLString params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"GET" URL:URLString params:params completion:completion];
+}
+- (NSURLSessionDataTask *)PUT:(NSString *)URLString params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"PUT" URL:URLString params:params completion:completion];
+}
+- (NSURLSessionDataTask *)HEAD:(NSString *)URLString params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"HEAD" URL:URLString params:params completion:completion];
+}
+- (NSURLSessionDataTask *)POST:(NSString *)URLString params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"POST" URL:URLString params:params completion:completion];
+}
+- (NSURLSessionDataTask *)PATCH:(NSString *)URLString params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"PATCH" URL:URLString params:params completion:completion];
+}
+- (NSURLSessionDataTask *)DELETE:(NSString *)URLString params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"DELETE" URL:URLString params:params completion:completion];
+}
+
+#pragma mark - Response
+
+- (NSURLSessionDataTask *)dataTaskWihtMethod:(NSString *)method URL:(NSString *)URLString
+                                      params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion
 {
     
-    NSString *method = @"POST";
-    
-    NSURL *url = [NSURL URLWithString:URLString relativeToURL:self.baseURL];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    request.HTTPMethod = method;
+    NSError *error = nil;
+    NSURLRequest *request = [self requestWithMethod:method URL:URLString params:params error:&error];
+    if (error)
+    {
+        completion(nil, error);
+        return nil;
+    }
     
     NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
@@ -52,15 +93,14 @@
         }
         else
         {
-            // Failure
+            
         }
         
     }];
     
     [task resume];
+    return task;
 }
-
-#pragma mark - Response
 
 - (BOOL)validateResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError * __autoreleasing *)error
 {
@@ -100,7 +140,6 @@
 
 - (id)responseObjectForResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error
 {
-    
     // Workaround for behavior of Rails to return a single space for `head :ok` (a workaround for a bug in Safari), which is not interpreted as valid input by NSJSONSerialization.
     // See https://github.com/rails/rails/issues/1742
     NSStringEncoding stringEncoding = self.stringEncoding;
@@ -159,6 +198,36 @@
 
 #pragma mark - Request
 
+- (NSURLRequest *)requestWithMethod:(NSString *)method URL:(NSString *)URLString params:(NSDictionary *)params error:(NSError *__autoreleasing *)error
+{
+    NSURL *url = [NSURL URLWithString:URLString relativeToURL:self.baseURL];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    request.HTTPMethod = method;
+    
+    [self.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
+        if (! [request valueForHTTPHeaderField:field])
+        {
+            [request setValue:value forHTTPHeaderField:field];
+        }
+    }];
+    
+    if (params)
+    {
+        NSString *query =  [SPQueryStringPair queryStringWithParams:params stringEncoding:self.stringEncoding];
+        
+        if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]])
+        {
+            request.URL = [NSURL URLWithString:[[request.URL absoluteString] stringByAppendingFormat:request.URL.query ? @"&%@" : @"?%@", query]];
+        }
+        else
+        {
+            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            [request setHTTPBody:[query dataUsingEncoding:self.stringEncoding]];
+        }
+    }
+    
+    return request;
+}
 
 @end
 
