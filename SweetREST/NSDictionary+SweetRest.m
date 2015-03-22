@@ -15,7 +15,7 @@
 {
     id object = [self objectForKey:key];
     
-    if (object && ([object isKindOfClass:[NSString class]] || [object isKindOfClass:[NSNumber class]]) )
+    if ( object && ([object isKindOfClass:[NSString class]] || [object isKindOfClass:[NSNumber class]]) )
     {
         return [object boolValue];
     }
@@ -25,11 +25,25 @@
     return NO;
 }
 
+- (double)doubleForKey:(id)key
+{
+    id obj = [self objectForKey:key];
+    
+    if ( obj && ([obj isKindOfClass:[NSNumber class]] || [obj isKindOfClass:[NSString class]]) )
+    {
+        return [obj doubleValue];
+    }
+    
+    [[NSException exceptionWithName:@"Unexpected data" reason:@"Expected date double" userInfo:nil] raise];
+    
+    return 0;
+}
+
 - (NSInteger)integerForKey:(id)key
 {
     id obj = [self objectForKey:key];
     
-    if (obj && ([obj isKindOfClass:[NSNumber class]] || [obj isKindOfClass:[NSString class]]))
+    if ( obj && ([obj isKindOfClass:[NSNumber class]] || [obj isKindOfClass:[NSString class]]) )
     {
         return [obj integerValue];
     }
@@ -46,16 +60,7 @@
 
 - (NSDate *)dateForKey:(id)key
 {
-    id obj = [self objectForKey:key];
-    
-    if (obj && ([obj isKindOfClass:[NSNumber class]] || [obj isKindOfClass:[NSString class]]))
-    {
-        return [NSDate dateWithTimeIntervalSince1970:[obj doubleValue]];
-    }
-    
-    [[NSException exceptionWithName:@"Unexpected data" reason:@"Expected date in unix format" userInfo:nil] raise];
-    
-    return nil;
+    return [NSDate dateWithTimeIntervalSince1970:[self doubleForKey:key]];
 }
 
 - (NSString *)stringForKey:(id)key
@@ -80,6 +85,9 @@
     {
         return obj;
     }
+    
+    [[NSException exceptionWithName:@"Unexpected data" reason:@"Expected number" userInfo:nil] raise];
+    
     return nil;
 }
 
@@ -92,6 +100,20 @@
     }
     
     [[NSException exceptionWithName:@"Unexpected data" reason:@"Expected array" userInfo:nil] raise];
+    
+    return nil;
+}
+
+- (NSDictionary *)dictionaryForKey:(id)key
+{
+    id obj = [self objectForKey:key];
+    
+    if (obj && [obj isKindOfClass:[NSDictionary class]])
+    {
+        return obj;
+    }
+    
+    [[NSException exceptionWithName:@"Unexpected data" reason:@"Expected dictionary" userInfo:nil] raise];
     
     return nil;
 }

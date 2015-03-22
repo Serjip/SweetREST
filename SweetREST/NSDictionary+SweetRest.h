@@ -11,6 +11,7 @@
 @interface NSDictionary (SweetRest)
 
 - (BOOL)boolForKey:(id)key;
+- (double)doubleForKey:(id)key;
 - (NSInteger)integerForKey:(id)key;
 - (NSUInteger)unsignedIntegerForKey:(id)key;
 
@@ -18,5 +19,6 @@
 - (NSArray *)arrayForKey:(id)key;
 - (NSString *)stringForKey:(id)key;
 - (NSNumber *)numberForKey:(id)key;
+- (NSDictionary *)dictionaryForKey:(id)key;
 
 @end
