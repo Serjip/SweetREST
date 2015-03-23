@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol SPSeweetRestDelegate;
 @interface SPSeweetRest : NSObject
 
 @property (nonatomic, strong, readonly) NSURL *baseURL;
@@ -18,6 +19,7 @@
 
 @property (nonatomic, assign) NSStringEncoding stringEncoding;
 @property (nonatomic, assign) NSJSONReadingOptions readingOptions;
+@property (nonatomic, weak) id<SPSeweetRestDelegate> delegate;
 
 - (void)setValue:(NSString *)value forHTTPHeaderField:(NSString *)field;
 - (void)removeValueForHTTPHeaderField:(NSString *)field;
@@ -35,7 +37,12 @@
 @end
 
 @protocol SPSeweetRestDelegate <NSObject>
-@end
 
+@optional
+- (void)sweetRest:(SPSeweetRest *)sweetRest didReceiveResponse:(NSHTTPURLResponse *)response;
+- (void)sweetRest:(SPSeweetRest *)sweetRest response:(NSHTTPURLResponse *)response didFailure:(NSError *)error;
+- (BOOL)sweetRest:(SPSeweetRest *)sweetRest shouldAcceptResponse:(NSHTTPURLResponse *)response error:(NSError **)error;
+
+@end
 
 extern NSString * const SPSeweetRestErrorDomain;

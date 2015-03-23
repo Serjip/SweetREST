@@ -36,8 +36,8 @@
         _session = session;
         _stringEncoding = NSUTF8StringEncoding;
         _readingOptions = NSJSONReadingMutableContainers;
-        _acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", nil];
         _acceptableStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
+        _acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", nil];
         _mutableHTTPRequestHeaders = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"SweetRest",@"User-Agent",nil];
         _HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", @"DELETE", nil];
     }
@@ -84,11 +84,13 @@
     return [self dataTaskWihtMethod:@"DELETE" URL:URLString params:params completion:completion];
 }
 
-#pragma mark - Response
+#pragma mark - Private
 
 - (NSURLSessionDataTask *)dataTaskWihtMethod:(NSString *)method URL:(NSString *)URLString
                                       params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion
 {
+    NSParameterAssert(URLString);
+    NSParameterAssert(completion);
     
     NSError *error = nil;
     NSURLRequest *request = [self requestWithMethod:method URL:URLString params:params error:&error];
@@ -105,6 +107,19 @@
         if (! error && [self validateResponse:(NSHTTPURLResponse *)response data:data error:&validationError])
         {
             // Success
+            
+            
+            
+            if ([self.delegate respondsToSelector:@selector(sweetRest:shouldAcceptResponse:error:)])
+            {
+                
+                NSError *error = nil;
+                [self.delegate sweetRest:self shouldAcceptResponse:(NSHTTPURLResponse *)response error:&error];
+                
+                
+                
+            }
+            
         }
         else
         {
@@ -116,6 +131,8 @@
     [task resume];
     return task;
 }
+
+#pragma mark - Response
 
 - (BOOL)validateResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError * __autoreleasing *)error
 {
