@@ -10,13 +10,14 @@
 
 @interface SPSeweetRest : NSObject
 
-@property (strong, nonatomic) NSURL *baseURL;
-@property (assign, nonatomic) NSStringEncoding stringEncoding;
-@property (copy, nonatomic) NSIndexSet *acceptableStatusCodes;
-@property (strong, nonatomic, readonly) NSURLSession *session;
-@property (nonatomic, strong) NSSet *acceptableContentTypes;
+@property (nonatomic, strong, readonly) NSURL *baseURL;
+@property (nonatomic, strong, readonly) NSURLSession *session;
+@property (nonatomic, strong, readonly) NSDictionary *HTTPRequestHeaders;
+@property (nonatomic, strong, readwrite) NSSet *acceptableContentTypes;
+@property (nonatomic, copy, readwrite) NSIndexSet *acceptableStatusCodes;
+
+@property (nonatomic, assign) NSStringEncoding stringEncoding;
 @property (nonatomic, assign) NSJSONReadingOptions readingOptions;
-@property (readonly, nonatomic, strong) NSDictionary *HTTPRequestHeaders;
 
 - (void)setValue:(NSString *)value forHTTPHeaderField:(NSString *)field;
 - (void)removeValueForHTTPHeaderField:(NSString *)field;

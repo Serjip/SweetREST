@@ -11,8 +11,8 @@
 
 @interface SPSeweetRest ()
 
-@property (nonatomic, strong) NSMutableDictionary *mutableHTTPRequestHeaders;
 @property (nonatomic, strong, readonly) NSSet *HTTPMethodsEncodingParametersInURI;
+@property (nonatomic, strong, readwrite) NSMutableDictionary *mutableHTTPRequestHeaders;
 
 @end
 
