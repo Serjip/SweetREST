@@ -19,7 +19,6 @@
 		D282EB3A1AB0DD510025F5C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D282EB391AB0DD510025F5C7 /* Images.xcassets */; };
 		D282EB3D1AB0DD520025F5C7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D282EB3B1AB0DD520025F5C7 /* LaunchScreen.xib */; };
 		D282EB491AB0DD520025F5C7 /* SweetRestExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D282EB481AB0DD520025F5C7 /* SweetRestExampleTests.m */; };
-		D282EB551AB0DD900025F5C7 /* SPRequestService.m in Sources */ = {isa = PBXBuildFile; fileRef = D282EB541AB0DD900025F5C7 /* SPRequestService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,8 +55,6 @@
 		D282EB421AB0DD520025F5C7 /* SweetRestExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SweetRestExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D282EB471AB0DD520025F5C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D282EB481AB0DD520025F5C7 /* SweetRestExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SweetRestExampleTests.m; sourceTree = "<group>"; };
-		D282EB531AB0DD900025F5C7 /* SPRequestService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPRequestService.h; sourceTree = "<group>"; };
-		D282EB541AB0DD900025F5C7 /* SPRequestService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPRequestService.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,8 +163,6 @@
 				D242ABD61ABEC93900D08C62 /* SPQueryStringPair.m */,
 				52C54BDF1AB2F55B00994840 /* SPSweetRest.h */,
 				52C54BE01AB2F55B00994840 /* SPSweetRest.m */,
-				D282EB531AB0DD900025F5C7 /* SPRequestService.h */,
-				D282EB541AB0DD900025F5C7 /* SPRequestService.m */,
 				52CA61BD1AB1A0ED008CB11D /* NSDictionary+SweetRest.h */,
 				52CA61BE1AB1A0ED008CB11D /* NSDictionary+SweetRest.m */,
 			);
@@ -314,7 +309,6 @@
 				D282EB351AB0DD510025F5C7 /* ViewController.m in Sources */,
 				D282EB321AB0DD510025F5C7 /* AppDelegate.m in Sources */,
 				52C54BE11AB2F55B00994840 /* SPSweetRest.m in Sources */,
-				D282EB551AB0DD900025F5C7 /* SPRequestService.m in Sources */,
 				D282EB2F1AB0DD510025F5C7 /* main.m in Sources */,
 				52CA61BF1AB1A0ED008CB11D /* NSDictionary+SweetRest.m in Sources */,
 			);

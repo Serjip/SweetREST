@@ -84,7 +84,39 @@
     return [self dataTaskWihtMethod:@"DELETE" URL:URLString params:params completion:completion];
 }
 
+#pragma mark - Category ExpectedResponse
+
+- (NSURLSessionDataTask *)GET:(NSString *)URLString params:(NSDictionary *)params try:(void (^)(id))try completion:(void (^)(NSError *))completion
+{
+    return [self dataTaskWihtMethod:@"GET" URL:URLString params:params try:try completion:completion];
+}
+
 #pragma mark - Private
+
+- (NSURLSessionDataTask *)dataTaskWihtMethod:(NSString *)method URL:(NSString *)URLString
+                                      params:(NSDictionary *)params try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion
+{
+    NSParameterAssert(try);
+    NSParameterAssert(completion);
+    
+    return [self dataTaskWihtMethod:method URL:URLString params:params completion:^(id responseObject, NSError *error) {
+        
+        if (! error)
+        {
+            @try {
+                
+                try(responseObject);
+            }
+            @catch (NSException *exception) {
+                
+                NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : exception.reason };
+                error = [NSError errorWithDomain:SPSeweetRestErrorDomain code:500 userInfo:userInfo];
+            }
+        }
+        
+        completion(error);
+    }];
+}
 
 - (NSURLSessionDataTask *)dataTaskWihtMethod:(NSString *)method URL:(NSString *)URLString
                                       params:(NSDictionary *)params completion:(void (^)(id responseObject, NSError *error))completion

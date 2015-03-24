@@ -45,4 +45,10 @@
 
 @end
 
+@interface SPSweetRest (ExpectedResponse)
+
+- (NSURLSessionDataTask *)GET:(NSString *)URLString params:(NSDictionary *)params try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion;
+
+@end
+
 extern NSString * const SPSeweetRestErrorDomain;
