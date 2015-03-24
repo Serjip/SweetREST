@@ -1,5 +1,5 @@
 //
-//  SRService.h
+//  SPSweetRest.h
 //  SweetRest
 //
 //  Created by Sergey Popov on 13.03.15.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @protocol SPSeweetRestDelegate;
-@interface SPSeweetRest : NSObject
+@interface SPSweetRest : NSObject
 
 @property (nonatomic, strong, readonly) NSURL *baseURL;
 @property (nonatomic, strong, readonly) NSURLSession *session;
@@ -39,9 +39,9 @@
 @protocol SPSeweetRestDelegate <NSObject>
 
 @optional
-- (void)sweetRest:(SPSeweetRest *)sweetRest didReceiveResponse:(NSHTTPURLResponse *)response;
-- (void)sweetRest:(SPSeweetRest *)sweetRest response:(NSHTTPURLResponse *)response didFailure:(NSError *)error;
-- (BOOL)sweetRest:(SPSeweetRest *)sweetRest shouldAcceptResponse:(NSHTTPURLResponse *)response error:(NSError **)error;
+- (void)sweetRest:(SPSweetRest *)sweetRest didReceiveResponse:(NSHTTPURLResponse *)response;
+- (void)sweetRest:(SPSweetRest *)sweetRest didFailResponse:(NSHTTPURLResponse *)response error:(NSError *)error;
+- (BOOL)sweetRest:(SPSweetRest *)sweetRest shouldAcceptResponse:(NSHTTPURLResponse *)response forObject:(id)responseObject error:(NSError **)error;
 
 @end
 

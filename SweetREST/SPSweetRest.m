@@ -1,22 +1,22 @@
 //
-//  SRService.m
+//  SPSweetRest.m
 //  SweetRest
 //
 //  Created by Sergey Popov on 13.03.15.
 //  Copyright (c) 2015 Sergey Popov. All rights reserved.
 //
 
-#import "SPSeweetRest.h"
+#import "SPSweetRest.h"
 #import "SPQueryStringPair.h"
 
-@interface SPSeweetRest ()
+@interface SPSweetRest ()
 
 @property (nonatomic, strong, readonly) NSSet *HTTPMethodsEncodingParametersInURI;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *mutableHTTPRequestHeaders;
 
 @end
 
-@implementation SPSeweetRest
+@implementation SPSweetRest
 
 #pragma mark - Properties
 
@@ -102,30 +102,41 @@
     
     NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        NSError *validationError = nil;
-        
-        if (! error && [self validateResponse:(NSHTTPURLResponse *)response data:data error:&validationError])
+        //
+        // Validate response
+        if (! error
+            && [self validateResponse:(NSHTTPURLResponse *)response data:data error:&error]
+            && [self.delegate respondsToSelector:@selector(sweetRest:didReceiveResponse:)] )
         {
-            // Success
-            
-            
-            
-            if ([self.delegate respondsToSelector:@selector(sweetRest:shouldAcceptResponse:error:)])
+            [self.delegate sweetRest:self didReceiveResponse:(NSHTTPURLResponse *)response];
+        }
+        
+        //
+        // Parsing object
+        id responseObject = nil;
+        if (! error)
+        {
+            responseObject = [self responseObjectForResponse:(NSHTTPURLResponse *)response data:data error:&error];
+        }
+        
+        //
+        // Accepting response
+        if (! error && [self.delegate respondsToSelector:@selector(sweetRest:shouldAcceptResponse:forObject:error:)])
+        {
+            BOOL ok = [self.delegate sweetRest:self shouldAcceptResponse:(NSHTTPURLResponse *)response forObject:responseObject error:&error];
+            if (! ok && ! error)
             {
-                
-                NSError *error = nil;
-                [self.delegate sweetRest:self shouldAcceptResponse:(NSHTTPURLResponse *)response error:&error];
-                
-                
-                
+                NSDictionary *userInfo = @{NSLocalizedDescriptionKey : NSLocalizedString(@"Unknown error", nil)};
+                error = [NSError errorWithDomain:SPSeweetRestErrorDomain code:404 userInfo:userInfo];
             }
-            
-        }
-        else
-        {
-            
         }
         
+        if (error && [self.delegate respondsToSelector:@selector(sweetRest:didFailResponse:error:)])
+        {
+            [self.delegate sweetRest:self didFailResponse:(NSHTTPURLResponse *)response error:error];
+        }
+        
+        completion(responseObject, error);
     }];
     
     [task resume];
@@ -142,7 +153,7 @@
     {
         if (self.acceptableContentTypes && ! [self.acceptableContentTypes containsObject:response.MIMEType])
         {
-            if ([data length] > 0 && [response URL])
+            if (data.length > 0 && response.URL)
             {
                 NSDictionary *userInfo = @{NSLocalizedDescriptionKey : [NSString stringWithFormat: NSLocalizedString(@"Unacceptable content-type: %@", nil), response.MIMEType]};
                 validationError = [NSError errorWithDomain:SPSeweetRestErrorDomain code:NSURLErrorCannotDecodeContentData userInfo:userInfo];
@@ -151,9 +162,14 @@
         
         if (self.acceptableStatusCodes && ! [self.acceptableStatusCodes containsIndex:(NSUInteger)response.statusCode] && response.URL)
         {
+            NSString *descriptoin = [NSHTTPURLResponse localizedStringForStatusCode:response.statusCode];
+            if (! descriptoin)
+            {
+                descriptoin = [NSString stringWithFormat: NSLocalizedString(@"Request failed: %@ (%ld)", nil), response.statusCode];
+            }
             
-            NSDictionary *userInfo = @{NSLocalizedDescriptionKey : [NSString stringWithFormat: NSLocalizedString(@"Request failed: %@ (%ld)", nil), response.statusCode]};
-            validationError = [NSError errorWithDomain:SPSeweetRestErrorDomain code:NSURLErrorBadServerResponse userInfo:userInfo];
+            NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : descriptoin };
+            validationError = [NSError errorWithDomain:SPSeweetRestErrorDomain code:response.statusCode userInfo:userInfo];
         }
     }
     else

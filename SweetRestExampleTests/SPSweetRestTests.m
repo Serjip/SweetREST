@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "SPSeweetRest.h"
+#import "SPSweetRest.h"
 
 @interface SPSweetRestTests : XCTestCase
 
-@property (nonatomic, strong, readonly) SPSeweetRest *sweetRest;
+@property (nonatomic, strong, readonly) SPSweetRest *sweetRest;
 
 @end
 
@@ -22,7 +22,7 @@
 {
     [super setUp];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    _sweetRest = [[SPSeweetRest alloc] initWithSession:session baseURL:[NSURL URLWithString:@"http://localhost:8080/"]];
+    _sweetRest = [[SPSweetRest alloc] initWithSession:session baseURL:[NSURL URLWithString:@"http://localhost:8080/"]];
 }
 
 - (void)tearDown {
@@ -54,7 +54,7 @@
         [ex fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:10.f handler:nil];
+    [self waitForExpectationsWithTimeout:30.f handler:nil];
 }
 
 @end

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1E93B5FC3977947D82526C7B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7338949FDB06E73B518FA53C /* libPods.a */; };
-		52C54BE11AB2F55B00994840 /* SPSeweetRest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C54BE01AB2F55B00994840 /* SPSeweetRest.m */; };
+		52C54BE11AB2F55B00994840 /* SPSweetRest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C54BE01AB2F55B00994840 /* SPSweetRest.m */; };
 		52CA61BF1AB1A0ED008CB11D /* NSDictionary+SweetRest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CA61BE1AB1A0ED008CB11D /* NSDictionary+SweetRest.m */; };
 		D242ABD71ABEC93900D08C62 /* SPQueryStringPair.m in Sources */ = {isa = PBXBuildFile; fileRef = D242ABD61ABEC93900D08C62 /* SPQueryStringPair.m */; };
 		D242ABD91ABED5B100D08C62 /* SPSweetRestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D242ABD81ABED5B100D08C62 /* SPSweetRestTests.m */; };
@@ -34,8 +34,8 @@
 
 /* Begin PBXFileReference section */
 		139E43FE38931FAD7B2D7242 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		52C54BDF1AB2F55B00994840 /* SPSeweetRest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPSeweetRest.h; sourceTree = "<group>"; };
-		52C54BE01AB2F55B00994840 /* SPSeweetRest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPSeweetRest.m; sourceTree = "<group>"; };
+		52C54BDF1AB2F55B00994840 /* SPSweetRest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPSweetRest.h; sourceTree = "<group>"; };
+		52C54BE01AB2F55B00994840 /* SPSweetRest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPSweetRest.m; sourceTree = "<group>"; };
 		52CA61BD1AB1A0ED008CB11D /* NSDictionary+SweetRest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+SweetRest.h"; sourceTree = "<group>"; };
 		52CA61BE1AB1A0ED008CB11D /* NSDictionary+SweetRest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+SweetRest.m"; sourceTree = "<group>"; };
 		68999F88E6BEDE929437CA1C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -164,8 +164,8 @@
 			children = (
 				D242ABD51ABEC93900D08C62 /* SPQueryStringPair.h */,
 				D242ABD61ABEC93900D08C62 /* SPQueryStringPair.m */,
-				52C54BDF1AB2F55B00994840 /* SPSeweetRest.h */,
-				52C54BE01AB2F55B00994840 /* SPSeweetRest.m */,
+				52C54BDF1AB2F55B00994840 /* SPSweetRest.h */,
+				52C54BE01AB2F55B00994840 /* SPSweetRest.m */,
 				D282EB531AB0DD900025F5C7 /* SPRequestService.h */,
 				D282EB541AB0DD900025F5C7 /* SPRequestService.m */,
 				52CA61BD1AB1A0ED008CB11D /* NSDictionary+SweetRest.h */,
@@ -313,7 +313,7 @@
 				D242ABD71ABEC93900D08C62 /* SPQueryStringPair.m in Sources */,
 				D282EB351AB0DD510025F5C7 /* ViewController.m in Sources */,
 				D282EB321AB0DD510025F5C7 /* AppDelegate.m in Sources */,
-				52C54BE11AB2F55B00994840 /* SPSeweetRest.m in Sources */,
+				52C54BE11AB2F55B00994840 /* SPSweetRest.m in Sources */,
 				D282EB551AB0DD900025F5C7 /* SPRequestService.m in Sources */,
 				D282EB2F1AB0DD510025F5C7 /* main.m in Sources */,
 				52CA61BF1AB1A0ED008CB11D /* NSDictionary+SweetRest.m in Sources */,
