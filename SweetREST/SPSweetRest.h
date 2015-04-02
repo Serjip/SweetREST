@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NSDictionary+ExpectedResponse.h"
 
 @protocol SPSeweetRestDelegate;
 @interface SPSweetRest : NSObject
@@ -47,7 +48,18 @@
 
 @interface SPSweetRest (ExpectedResponse)
 
-- (NSURLSessionDataTask *)GET:(NSString *)URLString params:(NSDictionary *)params try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion;
+- (NSURLSessionDataTask *)GET:(NSString *)URLString params:(NSDictionary *)params
+                          try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion;
+- (NSURLSessionDataTask *)PUT:(NSString *)URLString params:(NSDictionary *)params
+                          try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion;
+- (NSURLSessionDataTask *)HEAD:(NSString *)URLString params:(NSDictionary *)params
+                           try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion;
+- (NSURLSessionDataTask *)POST:(NSString *)URLString params:(NSDictionary *)params
+                           try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion;
+- (NSURLSessionDataTask *)PATCH:(NSString *)URLString params:(NSDictionary *)params
+                            try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion;
+- (NSURLSessionDataTask *)DELETE:(NSString *)URLString params:(NSDictionary *)params
+                             try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion;
 
 @end
 

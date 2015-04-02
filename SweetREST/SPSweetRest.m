@@ -9,6 +9,16 @@
 #import "SPSweetRest.h"
 #import "SPQueryStringPair.h"
 
+static dispatch_queue_t process_response_queue()
+{
+    static dispatch_queue_t queue = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create("ttitt.sweetrest.process.response.queue", DISPATCH_QUEUE_CONCURRENT);
+    });
+    return queue;
+}
+
 @interface SPSweetRest ()
 
 @property (nonatomic, strong, readonly) NSSet *HTTPMethodsEncodingParametersInURI;
@@ -86,9 +96,40 @@
 
 #pragma mark - Category ExpectedResponse
 
-- (NSURLSessionDataTask *)GET:(NSString *)URLString params:(NSDictionary *)params try:(void (^)(id))try completion:(void (^)(NSError *))completion
+- (NSURLSessionDataTask *)GET:(NSString *)URLString params:(NSDictionary *)params
+                          try:(void (^)(id))try completion:(void (^)(NSError *))completion
 {
     return [self dataTaskWihtMethod:@"GET" URL:URLString params:params try:try completion:completion];
+}
+
+- (NSURLSessionDataTask *)PUT:(NSString *)URLString params:(NSDictionary *)params
+                          try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"PUT" URL:URLString params:params try:try completion:completion];
+}
+
+- (NSURLSessionDataTask *)HEAD:(NSString *)URLString params:(NSDictionary *)params
+                           try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"HEAD" URL:URLString params:params try:try completion:completion];
+}
+
+- (NSURLSessionDataTask *)POST:(NSString *)URLString params:(NSDictionary *)params
+                           try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"POST" URL:URLString params:params try:try completion:completion];
+}
+
+- (NSURLSessionDataTask *)PATCH:(NSString *)URLString params:(NSDictionary *)params
+                            try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"PATCH" URL:URLString params:params try:try completion:completion];
+}
+
+- (NSURLSessionDataTask *)DELETE:(NSString *)URLString params:(NSDictionary *)params
+                             try:(void (^)(id responseObject))try completion:(void (^)(NSError *error))completion
+{
+    return [self dataTaskWihtMethod:@"DELETE" URL:URLString params:params try:try completion:completion];
 }
 
 #pragma mark - Private
@@ -99,22 +140,30 @@
     NSParameterAssert(try);
     NSParameterAssert(completion);
     
-    return [self dataTaskWihtMethod:method URL:URLString params:params completion:^(id responseObject, NSError *error) {
+    return [self dataTaskWihtMethod:method URL:URLString params:params completion:^(id responseObject, NSError *_error) {
         
-        if (! error)
-        {
-            @try {
-                
-                try(responseObject);
+        dispatch_async(process_response_queue(), ^{
+           
+            NSError *error = _error;
+            
+            if (! error)
+            {
+                @try {
+                    
+                    try(responseObject);
+                }
+                @catch (NSException *exception) {
+                    
+                    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : exception.reason };
+                    error = [NSError errorWithDomain:SPSeweetRestErrorDomain code:500 userInfo:userInfo];
+                }
             }
-            @catch (NSException *exception) {
-                
-                NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : exception.reason };
-                error = [NSError errorWithDomain:SPSeweetRestErrorDomain code:500 userInfo:userInfo];
-            }
-        }
-        
-        completion(error);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(error);
+            });
+            
+        });
     }];
 }
 
@@ -168,7 +217,9 @@
             [self.delegate sweetRest:self didFailResponse:(NSHTTPURLResponse *)response error:error];
         }
         
-        completion(responseObject, error);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(responseObject, error);
+        });
     }];
     
     [task resume];

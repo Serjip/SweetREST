@@ -1,17 +1,16 @@
 //
-//  NSDictionary+SweetRest.m
+//  NSDictionary+ExpectedResponse.m
 //  SweetRest
 //
 //  Created by Sergey Popov on 12.03.15.
 //  Copyright (c) 2015 Sergey Popov. All rights reserved.
 //
 
-#import "NSDictionary+SweetRest.h"
+#import "NSDictionary+ExpectedResponse.h"
 
-@implementation NSDictionary (SweetRest)
+@implementation NSDictionary (ExpectedResponse)
 
-
-- (BOOL)boolForKey:(id)key
+- (BOOL)expectedBoolForKey:(id)key
 {
     id object = [self objectForKey:key];
     
@@ -25,7 +24,7 @@
     return NO;
 }
 
-- (double)doubleForKey:(id)key
+- (double)expectedDoubleForKey:(id)key
 {
     id obj = [self objectForKey:key];
     
@@ -39,7 +38,7 @@
     return 0;
 }
 
-- (NSInteger)integerForKey:(id)key
+- (NSInteger)expectedIntegerForKey:(id)key
 {
     id obj = [self objectForKey:key];
     
@@ -53,17 +52,34 @@
     return 0;
 }
 
-- (NSUInteger)unsignedIntegerForKey:(id)key
+- (NSUInteger)expectedUnsignedIntegerForKey:(id)key
 {
-    return (NSUInteger)[self integerForKey:key];
+    return (NSUInteger)[self expectedIntegerForKey:key];
 }
 
-- (NSDate *)dateForKey:(id)key
+- (NSDate *)expectedDateForKey:(id)key
 {
-    return [NSDate dateWithTimeIntervalSince1970:[self doubleForKey:key]];
+    return [NSDate dateWithTimeIntervalSince1970:[self expectedDoubleForKey:key]];
 }
 
-- (NSString *)stringForKey:(id)key
+- (NSArray *)expectedArrayForKey:(id)key
+{
+    id obj = [self objectForKey:key];
+    if (obj && [obj isKindOfClass:[NSArray class]])
+    {
+        return obj;
+    }
+    else if ([obj isKindOfClass:[NSNull class]])
+    {
+        return nil;
+    }
+    
+    [[NSException exceptionWithName:@"Unexpected data" reason:@"Expected array" userInfo:nil] raise];
+    
+    return nil;
+}
+
+- (NSString *)expectedStringForKey:(id)key
 {
     id obj = [self objectForKey:key];
     
@@ -71,13 +87,17 @@
     {
         return obj;
     }
+    else if ([obj isKindOfClass:[NSNull class]])
+    {
+        return nil;
+    }
     
     [[NSException exceptionWithName:@"Unexpected data" reason:@"Expected string" userInfo:nil] raise];
     
     return nil;
 }
 
-- (NSNumber *)numberForKey:(id)key
+- (NSNumber *)expectedNumberForKey:(id)key
 {
     id obj = [self objectForKey:key];
     
@@ -91,26 +111,17 @@
     return nil;
 }
 
-- (NSArray *)arrayForKey:(id)key
-{
-    id obj = [self objectForKey:key];
-    if (obj && [obj isKindOfClass:[NSArray class]])
-    {
-        return obj;
-    }
-    
-    [[NSException exceptionWithName:@"Unexpected data" reason:@"Expected array" userInfo:nil] raise];
-    
-    return nil;
-}
-
-- (NSDictionary *)dictionaryForKey:(id)key
+- (NSDictionary *)expectedDictionaryForKey:(id)key
 {
     id obj = [self objectForKey:key];
     
     if (obj && [obj isKindOfClass:[NSDictionary class]])
     {
         return obj;
+    }
+    else if ([obj isKindOfClass:[NSNull class]])
+    {
+        return nil;
     }
     
     [[NSException exceptionWithName:@"Unexpected data" reason:@"Expected dictionary" userInfo:nil] raise];
