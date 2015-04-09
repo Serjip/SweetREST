@@ -202,9 +202,9 @@ static dispatch_queue_t process_response_queue()
         
         //
         // Accepting response
-        if (! error && [self.delegate respondsToSelector:@selector(sweetRest:shouldAcceptResponse:forObject:error:)])
+        if (! error && [self.delegate respondsToSelector:@selector(sweetRest:shouldAcceptResponse:forObject:provideError:)])
         {
-            BOOL ok = [self.delegate sweetRest:self shouldAcceptResponse:(NSHTTPURLResponse *)response forObject:responseObject error:&error];
+            BOOL ok = [self.delegate sweetRest:self shouldAcceptResponse:(NSHTTPURLResponse *)response forObject:responseObject provideError:&error];
             if (! ok && ! error)
             {
                 NSDictionary *userInfo = @{NSLocalizedDescriptionKey : NSLocalizedString(@"Unknown error", nil)};
