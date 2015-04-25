@@ -14,12 +14,13 @@
 
 @property (nonatomic, strong, readonly) NSURL *baseURL;
 @property (nonatomic, strong, readonly) NSURLSession *session;
-@property (nonatomic, strong, readonly) NSDictionary *HTTPRequestHeaders;
 @property (nonatomic, strong, readwrite) NSSet *acceptableContentTypes;
+@property (nonatomic, strong, readonly) NSDictionary *HTTPRequestHeaders;
 @property (nonatomic, copy, readwrite) NSIndexSet *acceptableStatusCodes;
 
 @property (nonatomic, assign) NSStringEncoding stringEncoding;
 @property (nonatomic, assign) NSJSONReadingOptions readingOptions;
+
 @property (nonatomic, weak) id<SPSeweetRestDelegate> delegate;
 
 - (void)setValue:(NSString *)value forHTTPHeaderField:(NSString *)field;
