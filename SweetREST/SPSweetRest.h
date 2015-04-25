@@ -43,7 +43,7 @@
 @optional
 - (void)sweetRest:(SPSweetRest *)sweetRest didReceiveResponse:(NSHTTPURLResponse *)response;
 - (void)sweetRest:(SPSweetRest *)sweetRest didFailResponse:(NSHTTPURLResponse *)response error:(NSError *)error;
-- (BOOL)sweetRest:(SPSweetRest *)sweetRest shouldAcceptResponse:(NSHTTPURLResponse *)response forObject:(id)responseObject error:(NSError **)error;
+- (BOOL)sweetRest:(SPSweetRest *)sweetRest shouldAcceptResponse:(NSHTTPURLResponse *)response forObject:(id)responseObject provideError:(NSError **)error;
 
 @end
 

@@ -71,7 +71,7 @@ Or every failure response:
 Moreover you may provide some custom error and accept every response:
 
 ```objective-c
-- (BOOL)sweetRest:(SPSweetRest *)sweetRest shouldAcceptResponse:(NSHTTPURLResponse *)response forObject:(id)responseObject error:(NSError **)error
+- (BOOL)sweetRest:(SPSweetRest *)sweetRest shouldAcceptResponse:(NSHTTPURLResponse *)response forObject:(id)responseObject provideError:(NSError **)error
 {
 	NSInteger code = response.statusCode;	
 	if (code == 201)
