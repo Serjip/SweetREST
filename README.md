@@ -95,3 +95,7 @@ Moreover you may provide some custom error and accept every response:
 ## License
 
 SweetREST is available under the MIT license. See the LICENSE file for more info.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Serjip/sweetrest/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
