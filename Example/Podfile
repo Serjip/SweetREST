@@ -1,3 +1,3 @@
-pod 'SweetREST', :path => '../'
+pod 'SweetREST', :git => 'https://github.com/Serjip/SweetREST.git'
 
 link_with 'SweetRestExample', 'SweetRestExampleTests'
