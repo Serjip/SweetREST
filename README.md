@@ -3,6 +3,14 @@
 SweetREST is a tiny lib for creating `http request service` of cocoa applications. 
 The lib allows to send common http requests such as **GET**, **POST**, **PUT**, **PATCH**, **HEAD** and **DELETE**. Is a lightweight version of amazing [AFNetworking](https://github.com/AFNetworking/AFNetworking), with a couple of additional features like nice [error handling](#error-handling).
 
+### Installation with CocoaPods
+
+[CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries.
+
+```ruby
+platform :ios, '7.0'
+pod "SweetREST"
+```
 
 ###Example
 
