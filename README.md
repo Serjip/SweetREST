@@ -1,7 +1,7 @@
 # SweetREST
 
 SweetREST is a tiny lib for creating `http request service` of cocoa applications. 
-The lib allows to send common http requests such as **GET**, **POST**, **PUT**, **PATCH**, **HEAD** and **DELETE**. Is a lightweight version of amazing [AFNetworking](https://github.com/AFNetworking/AFNetworking), with a couple of additional features like nice `error handling`.
+The lib allows to send common http requests such as **GET**, **POST**, **PUT**, **PATCH**, **HEAD** and **DELETE**. Is a lightweight version of amazing [AFNetworking](https://github.com/AFNetworking/AFNetworking), with a couple of additional features like nice [error handling](#error-handling).
 
 
 ###Example
@@ -74,8 +74,7 @@ Moreover you may provide some custom error and accept every response:
 - (BOOL)sweetRest:(SPSweetRest *)sweetRest shouldAcceptResponse:(NSHTTPURLResponse *)response forObject:(id)responseObject provideError:(NSError **)error
 {
 	NSInteger code = response.statusCode;	
-	if (code == 201)
-	{
+	if (code == 201) {
 		// Provide some custom error
 		NSDictionary *userInfo = @{NSLocalizedDescriptionKey : @"I do not like 201 status code!"};
         *error = [NSError errorWithDomain:SPSeweetRestErrorDomain code:777 userInfo:userInfo];
