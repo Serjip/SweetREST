@@ -1,7 +1,7 @@
 # SweetREST
 
 SweetREST is a tiny lib for creating `http request service` of cocoa applications. 
-The lib allows to send common http requests such as **GET**, **POST**, **PUT**, **PATCH**, **HEAD** and **DELETE**. Is a lightweight version of amazing [AFNetworking](https://github.com/AFNetworking/AFNetworking), with a couple of additional features like nice [error handling](#error-handling).
+The lib allows to send common http requests such as **GET**, **POST**, **PUT**, **PATCH**, **HEAD** and **DELETE**. It is a lightweight version of amazing [AFNetworking](https://github.com/AFNetworking/AFNetworking), with a couple of additional features like nice [error handling](#error-handling).
 
 ### Installation with CocoaPods
 
@@ -39,8 +39,8 @@ NSDictionary *params = @{@"name" : @"serj"};
 ```
 
 ###Error handling
-Error handling is a main feature of the lib. Unlike [AFNetworking](https://github.com/AFNetworking/AFNetworking) SweetREST is creating NSError's where codes coresponds [http status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html).
-For example your backend is responsing **401 Unauthorized**, you may handle it and expire auth token:
+Error handling is a main feature of the lib. Unlike [AFNetworking](https://github.com/AFNetworking/AFNetworking) SweetREST is creating NSError's where codes coresponds to [http status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html).
+For example if your backend is responsing **401 Unauthorized**, you may handle it and expire auth token:
 
 ```objective-c
 ...
@@ -51,7 +51,7 @@ if (error.code == 401) {
 
 ```
 
-One of the features is `SPSeweetRestDelegate` protocol. The protocol allows listen every **valid (with status code 2xx and JSON content type)** response form the server:
+One of the features is `SPSweetRestDelegate` protocol. The protocol allows listen every **valid (with status code 2xx and JSON content type)** response form the server:
 
 ```objective-c
 - (void)sweetRest:(SPSweetRest *)sweetRest didReceiveResponse:(NSHTTPURLResponse *)response
